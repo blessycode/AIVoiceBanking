@@ -1,0 +1,47 @@
+# OS and editor files
+.DS_Store
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+# Local Codex/IDE state
+.codex
+
+# Python caches and tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtual environments
+.venv/
+.venv312/
+venv/
+
+# Local environment files
+.env
+.env.*
+
+# Backend runtime data
+backend/uploads/
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+
+# ASR audio datasets and generated artifacts
+ASR /data/wav/
+ASR /data/normalized/
+ASR /data/manifests/
+ASR /data/learning_logs/
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
