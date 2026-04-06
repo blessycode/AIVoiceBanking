@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .config import CORS_ALLOW_ORIGINS
 from .database.init_db import init_db
 from .routes.voice_agent import router as voice_agent_router
+from .services.asr_service import warmup_asr_async
 
 
 logging.basicConfig(
@@ -29,6 +30,7 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup() -> None:
     init_db()
+    warmup_asr_async()
 
 
 @app.get("/health")

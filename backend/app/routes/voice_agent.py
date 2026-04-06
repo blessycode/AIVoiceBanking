@@ -12,7 +12,7 @@ from ..schemas import (
     VoiceAgentResponse,
 )
 from ..services.account_service import get_account_by_user_id
-from ..services.asr_service import ASRServiceError, transcribe_audio_file
+from ..services.asr_service import ASRServiceError, transcribe_audio_file, warmup_asr_async
 from ..services.audio_storage import save_upload
 from ..services.session_service import get_session_record
 from ..services.transaction_service import list_recent_transactions
@@ -26,6 +26,7 @@ router = APIRouter(tags=["voice-agent"])
 
 @router.post("/voice-agent/start", response_model=VoiceAgentResponse)
 def begin_voice_session(payload: StartSessionRequest) -> VoiceAgentResponse:
+    warmup_asr_async()
     agent_result = start_session(payload.session_id)
 
     with SessionLocal() as db:

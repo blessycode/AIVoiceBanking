@@ -34,6 +34,10 @@ Set these in Render:
   Use the Android app origin only if you later add a web client. For native Android installs, `*` is acceptable because the app is not a browser.
 - `APP_STORAGE_ROOT`
   Keep `/tmp/voice-banking` on Render free.
+- `ASR_MODEL_SIZE`
+  Set this to `tiny` on Render free for faster CPU inference.
+- `ASR_COMPUTE_TYPE`
+  Keep this as `int8`.
 
 ### Recommended Render flow
 

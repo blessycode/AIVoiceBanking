@@ -15,3 +15,7 @@ services:
         sync: false
       - key: APP_STORAGE_ROOT
         value: /tmp/voice-banking
+      - key: ASR_MODEL_SIZE
+        value: tiny
+      - key: ASR_COMPUTE_TYPE
+        value: int8

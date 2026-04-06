@@ -16,6 +16,9 @@ Make sure these files are committed:
 - `agent/`
 
 Do not rely on local-only files such as:
+flutter pub get
+flutter build apk --release --dart-define=BACKEND_URL=https://ai-voice-banking-api.onrender.com
+
 
 - `backend/voice_bank.db`
 - `backend/uploads/`
@@ -56,6 +59,8 @@ Add these values in the Render dashboard:
 
 - `DATABASE_URL`
 - `APP_STORAGE_ROOT=/tmp/voice-banking`
+- `ASR_MODEL_SIZE=tiny`
+- `ASR_COMPUTE_TYPE=int8`
 - `CORS_ALLOW_ORIGINS=*`
 
 If you prefer, copy values from `render.env.example`.

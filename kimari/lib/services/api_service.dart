@@ -77,7 +77,7 @@ class ApiService {
             );
 
       final streamedResponse = await request.send().timeout(
-        const Duration(seconds: 45),
+        const Duration(seconds: 120),
       );
       final response = await http.Response.fromStream(streamedResponse);
       return _parseResponse(response);
@@ -89,7 +89,7 @@ class ApiService {
       );
     } on TimeoutException {
       throw ApiException(
-        'Backend timed out while processing the voice turn. Check ASR performance and backend logs.',
+        'Backend timed out while processing the voice turn. Wait for the backend to warm up, then try again. Check Render logs if it keeps failing.',
       );
     }
   }
