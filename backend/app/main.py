@@ -3,6 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .config import CORS_ALLOW_ORIGINS
 from .database.init_db import init_db
 from .routes.voice_agent import router as voice_agent_router
 
@@ -14,10 +15,12 @@ logging.basicConfig(
 
 app = FastAPI(title="AI Voice Banking System", version="1.0.0")
 
+allow_any_origin = CORS_ALLOW_ORIGINS == ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=CORS_ALLOW_ORIGINS,
+    allow_credentials=not allow_any_origin,
     allow_methods=["*"],
     allow_headers=["*"],
 )

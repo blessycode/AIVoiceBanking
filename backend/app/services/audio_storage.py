@@ -3,8 +3,7 @@ from uuid import uuid4
 
 from fastapi import UploadFile
 
-
-UPLOAD_ROOT = Path(__file__).resolve().parents[2] / "uploads"
+from ..config import UPLOAD_ROOT
 
 
 def save_upload(session_id: str, upload: UploadFile) -> Path:

@@ -2,7 +2,8 @@ from datetime import datetime
 
 from sqlalchemy import inspect
 
-from .db import Base, DATABASE_PATH, engine
+from ..config import DATABASE_IS_SQLITE, LOCAL_DATABASE_PATH
+from .db import Base, engine
 from . import models  # noqa: F401
 
 
@@ -41,20 +42,25 @@ def _schema_is_compatible() -> bool:
 
 
 def _backup_incompatible_database() -> None:
-    if not DATABASE_PATH.exists():
+    if not LOCAL_DATABASE_PATH.exists():
         return
 
     timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-    backup_path = DATABASE_PATH.with_name(
-        f"{DATABASE_PATH.stem}_legacy_{timestamp}{DATABASE_PATH.suffix}"
+    backup_path = LOCAL_DATABASE_PATH.with_name(
+        f"{LOCAL_DATABASE_PATH.stem}_legacy_{timestamp}{LOCAL_DATABASE_PATH.suffix}"
     )
     engine.dispose()
-    DATABASE_PATH.replace(backup_path)
+    LOCAL_DATABASE_PATH.replace(backup_path)
 
 
 def init_db() -> None:
-    if not _schema_is_compatible():
+    if DATABASE_IS_SQLITE and not _schema_is_compatible():
         _backup_incompatible_database()
+    elif not DATABASE_IS_SQLITE and not _schema_is_compatible():
+        raise RuntimeError(
+            "Existing database schema is incompatible with the current app "
+            "models. Recreate the database or run a migration before startup."
+        )
     Base.metadata.create_all(bind=engine)
 
 

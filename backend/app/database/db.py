@@ -1,16 +1,12 @@
-from pathlib import Path
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-
-BACKEND_ROOT = Path(__file__).resolve().parents[2]
-DATABASE_PATH = BACKEND_ROOT / "voice_bank.db"
-DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
+from ..config import DATABASE_IS_SQLITE, DATABASE_URL
 
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False},
+    connect_args={"check_same_thread": False} if DATABASE_IS_SQLITE else {},
+    pool_pre_ping=True,
     future=True,
 )
 SessionLocal = sessionmaker(

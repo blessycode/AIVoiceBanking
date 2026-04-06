@@ -1,0 +1,23 @@
+.git
+**/.git
+.idea
+**/.idea
+.venv
+.venv312
+**/__pycache__
+**/.DS_Store
+generated
+kimari/build
+kimari/.dart_tool
+kimari/.flutter-plugins
+kimari/.flutter-plugins-dependencies
+kimari/.packages
+backend/voice_bank.db
+backend/*_legacy_*.db
+backend/uploads
+ASR /.idea
+ASR /analysis
+ASR /training
+ASR /reports
+ASR /models
+ASR /data

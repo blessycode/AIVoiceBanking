@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: ai-voice-banking-api
+    runtime: docker
+    region: frankfurt
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeployTrigger: commit
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ALLOW_ORIGINS
+        sync: false
+      - key: APP_STORAGE_ROOT
+        value: /tmp/voice-banking
