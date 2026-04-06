@@ -10,12 +10,11 @@ Make sure these files are committed:
 - `render.yaml`
 - `render.env.example`
 - `backend/app/`
+- `backend/app/asr_runtime/`
 - `backend/requirements.txt`
 - `backend/requirements-render.txt`
 - `agent/`
-- `ASR /inference/`
-- `ASR /utils/`
-postgresql://postgres.jvgmbmpvhkywjhrvfaxs:[YOUR-PASSWORD]@aws-1-eu-central-1.pooler.supabase.com:5432/postgres
+
 Do not rely on local-only files such as:
 
 - `backend/voice_bank.db`
@@ -23,6 +22,7 @@ Do not rely on local-only files such as:
 - local `.env` files
 - virtual environments
 - generated ASR data or training artifacts
+- the embedded `ASR ` repo
 
 ## Stage 2: Create Supabase Postgres
 

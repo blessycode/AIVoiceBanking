@@ -5,13 +5,13 @@ This repository is now set up to run locally with SQLite and in the cloud with h
 ## 1. Create the database in Supabase
 
 1. Create a new Supabase project.
-2. In `Project Settings -> Database`, copy the connection string.
-3. Use the direct Postgres connection string and keep `sslmode=require`.
+2. Click `Connect` in the project dashboard and copy the session pooler connection string.
+3. Keep `sslmode=require` if Supabase includes it.
 
 Example:
 
 ```text
-postgresql://postgres:password@db.example.supabase.co:5432/postgres?sslmode=require
+postgresql://postgres.project-ref:password@aws-1-eu-central-1.pooler.supabase.com:5432/postgres
 ```
 
 The FastAPI app will create tables on startup for an empty database.
@@ -49,8 +49,7 @@ For local development:
 
 ```bash
 cp backend/.env.example backend/.env
-.venv312/bin/pip install -r backend/requirements.txt
-.venv312/bin/pip install -r "ASR /requirements.txt"
+.venv312/bin/pip install -r backend/requirements-render.txt
 backend/scripts/run_backend.sh
 ```
 

@@ -28,6 +28,7 @@ venv/
 # Local environment files
 .env
 .env.*
+!backend/.env.example
 
 # Backend runtime data
 backend/uploads/

@@ -1,7 +1,5 @@
 import logging
-import sys
 from dataclasses import dataclass
-from pathlib import Path
 
 
 logger = logging.getLogger(__name__)
@@ -19,31 +17,11 @@ class ASRResult:
     model_name: str | None = None
 
 
-def _resolve_asr_root() -> Path:
-    repo_root = Path(__file__).resolve().parents[3]
-    candidates = [repo_root / "ASR ", repo_root / "ASR"]
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate
-    raise ASRServiceError("ASR module directory was not found.")
-
-
-def _load_transcriber():
-    asr_root = _resolve_asr_root()
-    asr_root_str = str(asr_root)
-    if asr_root_str not in sys.path:
-        sys.path.insert(0, asr_root_str)
-
-    try:
-        from inference.transcribe_mobile import transcribe_mobile_audio
-    except Exception as exc:  # pragma: no cover - import failure depends on env
-        raise ASRServiceError(f"Unable to import ASR module: {exc}") from exc
-
-    return transcribe_mobile_audio
-
-
 def transcribe_audio_file(audio_file_path: str) -> ASRResult:
-    transcribe_mobile_audio = _load_transcriber()
+    try:
+        from ..asr_runtime.transcribe_mobile import transcribe_mobile_audio
+    except Exception as exc:  # pragma: no cover - import failure depends on env
+        raise ASRServiceError(f"Unable to import ASR runtime: {exc}") from exc
 
     try:
         result = transcribe_mobile_audio(audio_file_path, source="backend_voice_agent")
