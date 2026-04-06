@@ -19,3 +19,5 @@ services:
         value: tiny
       - key: ASR_COMPUTE_TYPE
         value: int8
+      - key: ASR_MIN_CORRECTIONS_FOR_RETRAIN
+        value: 25

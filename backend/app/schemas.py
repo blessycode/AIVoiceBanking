@@ -47,3 +47,24 @@ class TransactionsResponse(BaseModel):
     user_id: int | None = None
     currency: str | None = None
     transactions: list[DashboardTransaction] = Field(default_factory=list)
+
+
+class VoiceLogCorrectionRequest(BaseModel):
+    corrected_transcript: str = Field(..., min_length=1)
+
+
+class VoiceLogCorrectionResponse(BaseModel):
+    voice_log_id: int
+    session_id: str
+    transcript: str
+    corrected_transcript: str
+    language: str
+    ready_for_retraining: bool
+
+
+class RetrainingManifestResponse(BaseModel):
+    manifest_path: str
+    exported_samples: int
+    corrected_samples: int
+    minimum_recommended_samples: int
+    ready_for_retraining: bool

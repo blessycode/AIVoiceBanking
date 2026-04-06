@@ -61,6 +61,7 @@ Add these values in the Render dashboard:
 - `APP_STORAGE_ROOT=/tmp/voice-banking`
 - `ASR_MODEL_SIZE=tiny`
 - `ASR_COMPUTE_TYPE=int8`
+- `ASR_MIN_CORRECTIONS_FOR_RETRAIN=25`
 - `CORS_ALLOW_ORIGINS=*`
 
 If you prefer, copy values from `render.env.example`.

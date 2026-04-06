@@ -7,8 +7,11 @@ from ..database.db import SessionLocal
 from ..schemas import (
     DashboardSummaryResponse,
     DashboardTransaction,
+    RetrainingManifestResponse,
     StartSessionRequest,
     TransactionsResponse,
+    VoiceLogCorrectionRequest,
+    VoiceLogCorrectionResponse,
     VoiceAgentResponse,
 )
 from ..services.account_service import get_account_by_user_id
@@ -17,7 +20,12 @@ from ..services.audio_storage import save_upload
 from ..services.session_service import get_session_record
 from ..services.transaction_service import list_recent_transactions
 from ..services.user_service import get_user_by_id
-from ..services.voice_log_service import log_voice_turn
+from ..services.voice_log_service import (
+    apply_transcript_correction,
+    export_retraining_manifest,
+    get_voice_log,
+    log_voice_turn,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -202,4 +210,75 @@ def get_voice_session_transactions(
                 )
                 for transaction in transactions
             ],
+        )
+
+
+@router.patch(
+    "/voice-agent/logs/{voice_log_id}/correction",
+    response_model=VoiceLogCorrectionResponse,
+)
+def update_voice_log_correction(
+    voice_log_id: int,
+    payload: VoiceLogCorrectionRequest,
+) -> VoiceLogCorrectionResponse:
+    with SessionLocal() as db:
+        try:
+            record = apply_transcript_correction(
+                db,
+                voice_log_id=voice_log_id,
+                corrected_transcript=payload.corrected_transcript,
+            )
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=str(exc),
+            ) from exc
+
+        if record is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Voice log not found.",
+            )
+
+        manifest_info = export_retraining_manifest(db)
+        return VoiceLogCorrectionResponse(
+            voice_log_id=record.id,
+            session_id=record.session_id,
+            transcript=record.transcript,
+            corrected_transcript=record.corrected_transcript or "",
+            language=record.language,
+            ready_for_retraining=manifest_info["ready_for_retraining"],
+        )
+
+
+@router.post(
+    "/voice-agent/retraining/export-manifest",
+    response_model=RetrainingManifestResponse,
+)
+def export_voice_retraining_manifest() -> RetrainingManifestResponse:
+    with SessionLocal() as db:
+        return RetrainingManifestResponse(**export_retraining_manifest(db))
+
+
+@router.get(
+    "/voice-agent/logs/{voice_log_id}/correction",
+    response_model=VoiceLogCorrectionResponse,
+)
+def get_voice_log_correction(voice_log_id: int) -> VoiceLogCorrectionResponse:
+    with SessionLocal() as db:
+        record = get_voice_log(db, voice_log_id)
+        if record is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Voice log not found.",
+            )
+
+        manifest_info = export_retraining_manifest(db)
+        return VoiceLogCorrectionResponse(
+            voice_log_id=record.id,
+            session_id=record.session_id,
+            transcript=record.transcript,
+            corrected_transcript=record.corrected_transcript or "",
+            language=record.language,
+            ready_for_retraining=manifest_info["ready_for_retraining"],
         )

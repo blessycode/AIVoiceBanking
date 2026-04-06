@@ -38,6 +38,8 @@ Set these in Render:
   Set this to `tiny` on Render free for faster CPU inference.
 - `ASR_COMPUTE_TYPE`
   Keep this as `int8`.
+- `ASR_MIN_CORRECTIONS_FOR_RETRAIN`
+  Keep this at `25` unless you want a different retraining threshold.
 
 ### Recommended Render flow
 
